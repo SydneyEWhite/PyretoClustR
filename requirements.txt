@@ -1,0 +1,11 @@
+pandas
+numpy
+configparser
+pathlib
+scikit-learn
+scikit-learn-extra
+scipy
+matplotlib
+seaborn
+
+
