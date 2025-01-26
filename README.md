@@ -1,7 +1,7 @@
 # K-Means & K-Medoid Clustering on Pareto Optimal Solutions
 ### Last Updated: January 26th 2025
 ### Contributors: Sydney White, Michael Strauch, Felix Witing, Cordula Wittekind, Martin Volk
-### [Paper Reference]
+### [Paper Submitted]
 
 ## Overview
  - This framework performs k-means and k-medoids clustering on a set of Pareto optimal solutions derived from a multi-objective optimization algorithm. 
@@ -47,12 +47,12 @@ project_root/
 <br>│ └── plot_frequency_maps.R
 <br>│
 <br>└── output/ (populated once code is run)
-<br>  ├── correlation_matrix.csv (if run)
-<br>  ├── kmeans_data_w_clusters_representativesolutions.csv (created with kmeans.py when Extreme Solutions are not handled) 
-<br>  ├── kmeans_data_w_clusters_representativesolutions_outliers.csv (created with kmeans.py when Extreme Solutions are handled)
-<br>  ├── kmedoid_data_w_clusters_representativesolutions.csv (created with kmedoid.py when Extreme Solutions are not handled)
-<br>  ├── kmedoid_data_w_clusters_representativesolutions_outliers.csv (created with kmedoid.py when Extreme Solutions are handled)
-<br>  └── freq_map_cluster_X.png (if run)
+<br> &ensp;├── correlation_matrix.csv (if run)
+<br> &ensp;├── kmeans_data_w_clusters_representativesolutions.csv (created with kmeans.py when Extreme Solutions are not handled) 
+<br> &ensp;├── kmeans_data_w_clusters_representativesolutions_outliers.csv (created with kmeans.py when Extreme Solutions are handled)
+<br> &ensp;├── kmedoid_data_w_clusters_representativesolutions.csv (created with kmedoid.py when Extreme Solutions are not handled)
+<br> &ensp;├── kmedoid_data_w_clusters_representativesolutions_outliers.csv (created with kmedoid.py when Extreme Solutions are handled)
+<br> &ensp;└── freq_map_cluster_X.png (if run)
 
 ## Setup
 1. **Upload CSV File**: Place your CSV file containing Pareto optimal solutions data within the `input` folder. The CSV file should contain any columns you are interested in clustering or visualizing with values in float or integer format. Each row of the CSV file should represent a Pareto optimal solution. Additionally if you plan to utilize spatial mapping visualizations, provide a shapefile with all spatial units that were taken into account in the optimization (see below). In such a case, the CSV file should have additional columns formatted as 'UNIT_###' where ### represents the spatial unit's identification number. The data in these columns should be numerical values representing the optimization options (usually land use options) you're interested in plotting. Values for different options must be sequential, starting with 1.
