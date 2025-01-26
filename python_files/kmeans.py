@@ -418,15 +418,18 @@ def main():
     # Violin plot for var_1
     sns.violinplot(x=all_data['Cluster'], y=var_1, data=all_data, ax=axes[0, 0], order=numerical_order)
     axes[0, 0].set_title(f'Distribution of {var_1} by Cluster')
+    axes[0, 0].set_ylabel(var_1_label)
 
     # Violin plot for var_2
     sns.violinplot(x=all_data['Cluster'], y=var_2, data=all_data, ax=axes[0, 1], order=numerical_order)
     axes[0, 1].set_title(f'Distribution of {var_2} by Cluster')
+    axes[0, 1].set_ylabel(var_2_label)
 
     if num_variables_to_plot >= 3:
         # Violin plot for var_3
         sns.violinplot(x=all_data['Cluster'], y=var_3, data=all_data, ax=axes[1, 0], order=numerical_order)
         axes[1, 0].set_title(f'Distribution of {var_3} by Cluster')
+        axes[1, 0].set_ylabel(var_3_label)
     else:
         axes[1, 0].axis('off')
     
@@ -434,6 +437,7 @@ def main():
         # Violin plot for var_4
         sns.violinplot(x=all_data['Cluster'], y=var_4, data=all_data, ax=axes[1, 1], order=numerical_order)
         axes[1, 1].set_title(f'Distribution of {var_4} by Cluster')
+        axes[1, 1].set_ylabel(var_4_label)
     else:
         axes[1, 1].axis('off')
 
