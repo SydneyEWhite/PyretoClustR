@@ -75,10 +75,19 @@ project_root/
  
 3. Correlation Matrix (Optional): To help define the variables you want to keep in the framework, you can first run correlation_matrix.py on your data. This will help identify highly correlated variables which can be considered for removal. Update the `config.ini` file if the input variables have changed.
 
-4. Run kmeans.py
- - open the command prompt
- - navigate to the python_files folder
- - run: `python kmeans.py`
+4. There are two options for running the Python scripts; launching the pre-compiled Python executable (a) or using standard Python commands (b).
+   
+    4.a) Run kmeans.exe
+   - navigate to the python_files folder
+   - click on kmeans.exe
+   - this will create a temporary Python environment, locate and prepare all necessary dependencies, start the Python interpreter and execute the script
+   
+    4.b) Run kmeans.py
+   - open the command prompt
+   - navigate to the python_files folder
+   - run: `python kmeans.py`
+
+   
  - This script will read the input CSV and configuration file, perform PCA, handle extreme solutions if specified, and apply K-means clustering. The best solution as defined by silhouette score will be graphed, and the results, including cluster assignments and representative solutions, will be saved in the output folder.
  - Output
    - The output files will be saved in the output folder and include:
@@ -86,11 +95,19 @@ project_root/
    - kmeans_data_w_clusters_representativesolutions_outliers.csv (when outliers are removed)
    - These files contain the original data with additional columns indicating the cluster assignments and representative solutions.
    - (if run) freq_map_cluster_X.png (frequency map images for each cluster)
+     
+5. There are two options for running the Python scripts; launching the pre-compiled Python executable (a) or using standard Python commands (b).
+   
+    5.a) Run kmedoid.exe
+   - navigate to the python_files folder
+   - click on kmedoid.exe
+   
+    5.b) Run kmedoid.py
+   - open the command prompt
+   - navigate to the python_files folder
+   - run: `python kmedoid.py`
 
-5. Run kmedoid.py
- - open the command prompt
- - navigate to the python_files folder
- - run: `python kmedoid.py`
+   
  - This script will read the input CSV and configuration file, perform PCA, handle extreme solutions if specified, and apply K-medoid clustering. The best solution as defined by silhouette score will be graphed, and the results, including cluster assignments and representative solutions, will be saved in the output folder.
   - Output
     - The output files will be saved in the output folder and include:
