@@ -1,7 +1,7 @@
 ## Simple install and load function for CRAN packages
 load_install <- function(pkg_name) {
   if(!pkg_name %in% rownames(installed.packages())) {
-    install.packages(pkg_name)
+    install.packages(pkg_name, repos = "http://cran.us.r-project.org")
   }
   library(pkg_name, character.only = TRUE)
 }
@@ -18,6 +18,7 @@ load_install("ini")
 path <- file.path(here() %>% dirname())
 print(path)
 
+tmap_flag <- 0
 if('tmap' %in% rownames(installed.packages())) tmap_flag <- ifelse(as.numeric(substr(packageVersion("tmap"), 1,3)) < 3.9, 1, 0)
 
 if(!'tmap' %in% rownames(installed.packages()) | tmap_flag == 1){
@@ -100,7 +101,7 @@ for(i in 0:n_clust){
   
   tmap_options(frame = F, # Plot panels are plotted without frames
                asp = 1.5, # Aspect ratio of plot panels. Change if place for legend is too narrow. value > 1 = plot wider
-               max.categories = Inf,
+               #max.categories = Inf,
                component.autoscale = T)
   
   # define the intervals of the scale bar, depending on the catchment size.
