@@ -54,9 +54,6 @@ project_root/
 <br> &ensp;├── kmedoid_data_w_clusters_representativesolutions_outliers.csv (created with kmedoid.py when Extreme Solutions are handled)
 <br> &ensp;└── freq_map_cluster_X.png (if run)
 
-## Performance
-On a test dataset (2,419 solutions and 14 variables) with parameters (15 number of clusters, 6 PCA components, and outlier handling enabled) a single iteration of outlier handling, PCA, and clustering took 1.40 seconds on average over 10 trials on a Windows machine with an Intel i7 processor. Running the test data to iterate over 15-20 clusters, 1-9 principal components, and 30 combinations of outlier parameters (deviations: 2-3, step: 0.2, count: 2-6) took 801.65 seconds (13 minutes 21 seconds) on the same machine.
-
 ## Setup
 1. **Upload CSV File**: Place your CSV file containing Pareto optimal solutions data within the `input` folder. The CSV file should contain any columns you are interested in clustering or visualizing with values in float or integer format. Each row of the CSV file should represent a Pareto optimal solution. Additionally if you plan to utilize spatial mapping visualizations, provide a shapefile with all spatial units that were taken into account in the optimization (see below). In such a case, the CSV file should have additional columns formatted as 'UNIT_###' where ### represents the spatial unit's identification number. The data in these columns should be numerical values representing the optimization options (usually land use options) you're interested in plotting. Values for different options must be sequential, starting with 1.
 
@@ -120,6 +117,9 @@ On a test dataset (2,419 solutions and 14 variables) with parameters (15 number 
     - (if run) freq_map_cluster_X.png (frequency map images for each cluster)
 
 6. If unsatisfied with results, edit the `config.ini` file to rerun over a wider range of possible inputs
+
+## Performance
+On a test dataset (2,419 solutions and 14 variables) with parameters (15 number of clusters, 6 PCA components, and outlier handling enabled) a single iteration of outlier handling, PCA, and clustering took 1.40 seconds on average over 10 trials on a Windows machine with an Intel i7 processor. Running the test data to iterate over 15-20 clusters, 1-9 principal components, and 30 combinations of outlier parameters (deviations: 2-3, step: 0.2, count: 2-6) took 801.65 seconds (13 minutes 21 seconds) on the same machine.
 
 ## Notes
  - If the user doesn't want to iterate over different values for principal components or extreme solution handeling, they can set the min/max values in the config file to the same value. This causes the code to only run for said singular number.
