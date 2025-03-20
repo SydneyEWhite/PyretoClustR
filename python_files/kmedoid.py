@@ -5,7 +5,7 @@ from pathlib import Path
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn_extra.cluster import KMedoids
-from sklearn.metrics import silhouette_score
+from sklearn.metrics import silhouette_score, davies_bouldin_score
 from scipy.spatial.distance import cdist
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -39,15 +39,17 @@ def run_kmedoids_multiple_times(pca_data, min_clusters, max_clusters, input_data
     best_medoids = None
     if fixed_clusters_boolean == True:     # If the user has opted for a fixed number of clusters, the code will only run for fixed_clusters
         best_labels, best_medoids, best_medoids_index = kmedoids_clustering(pca_data, input_data, fixed_clusters)
-        #pca_score = silhouette_score(pca_data, best_labels)
+        #best_score = silhouette_score(pca_data, best_labels)
         best_score = silhouette_score(input_data, best_labels)
-        print(f"Clusters: {fixed_clusters}, Input Data Silhouette Score: {best_score:.4f}")
+        dbi = davies_bouldin_score(input_data, best_labels)
+        print(f"Clusters: {fixed_clusters}, Input Data Silhouette Score: {best_score:.4f}, Davies Bouldin Score: {dbi:.4f}")
     elif fixed_clusters_boolean == False:   # If the user has NOT opted for a fixed number of clusters, the code will itereate through min_clusters to max_clusters inclusive
         for num_clusters in range(min_clusters, max_clusters + 1): # The "+1" makes the interation inclusive
             labels, medoids, medoids_index = kmedoids_clustering(pca_data, input_data, num_clusters)
-            #pca_sil_score = silhouette_score(pca_data, labels)
+            #inputdata_sil_score = silhouette_score(pca_data, labels)
             inputdata_sil_score = silhouette_score(input_data, labels)
-            print(f"Clusters: {num_clusters}, Input Data Silhouette Score: {inputdata_sil_score:.4f}")
+            dbi = davies_bouldin_score(input_data, labels)
+            print(f"Clusters: {num_clusters}, Input Data Silhouette Score: {inputdata_sil_score:.4f}, Davies Bouldin Score: {dbi:.4f}")
             if inputdata_sil_score > best_score:
                 best_score = inputdata_sil_score
                 best_labels = labels
@@ -129,6 +131,9 @@ def main():
             # Define PCA
             pca = PCA(n_components=num_components)
 
+            # Cache to store previously computed results
+            cache = {}
+
             # Iterate through the range of deviation and count values used for defining extreme solutions
             for d in non_integer_range(deviations_min, deviations_max, deviations_step):
                 for c in range(count_min, count_max+1):
@@ -136,19 +141,36 @@ def main():
                     # Temporarily remove extreme solutions before clustering
                     input_data_no_outliers, num_outliers = remove_outliers(input_data, d, c)
 
-                    # Temporarily remove outliers from the original data
-                    raw_data_no_outliers = raw_data[raw_data.index.isin(input_data_no_outliers.index)].copy()  # Filter based on input_data_no_outliers index
+                    # It's possible that difference values for count and deviations result in the same outliers
+                    # In order to prevent the code from repeating clustering for the same PCA and outliers, we cache the results
 
-                    # Cast the input data onto the defined number of principal components
-                    principal_components = pca.fit_transform(input_data_no_outliers)
+                    # Generate a unique key based on the index of the cleaned data (sorted for consistency)
+                    data_hash_key = hash(tuple(sorted(input_data_no_outliers.index)))
 
-                    # Create a DataFrame to hold the principal component data (aka the input data cast onto the x principal component axes)
-                    pca_data = pd.DataFrame(data=principal_components, columns=[f"PC{i+1}" for i in range(num_components)])
+                    # Check if this cleaned dataset has already been computed
+                    if data_hash_key in cache:
+                        print(f"\nnumber of extreme solutions: {num_outliers}, deviations: {d}, count: {c}")
+                        num_clusters_cache, silhouette_score_cache, d_cache, c_cache = cache[data_hash_key]
+                        print(f"this input led to the same outliers produced as for deviations = {d_cache} and count = {c_cache} thus the clustering results are the same.")
+                        print(f"Best Cluster Count: {num_clusters_cache}, Best PCA Silhouette Score: {silhouette_score_cache:.4f}")
 
-                    # Perform k-medoids clustering and select the best result based on the highest silhouette score
-                    print(f"\nnumber of extreme solutions: {num_outliers}, deviations: {d}, count: {c}")
-                    labels, representative_solutions_index, representative_solutions, silhouette_score = run_kmedoids_multiple_times(pca_data, min_clusters, max_clusters, input_data_no_outliers, pca, fixed_clusters_boolean, fixed_clusters)
-            
+                    else:
+                        # Temporarily remove outliers from the original data
+                        raw_data_no_outliers = raw_data[raw_data.index.isin(input_data_no_outliers.index)].copy()  # Filter based on input_data_no_outliers index
+
+                        # Cast the input data onto the defined number of principal components
+                        principal_components = pca.fit_transform(input_data_no_outliers)
+
+                        # Create a DataFrame to hold the principal component data (aka the input data cast onto the x principal component axes)
+                        pca_data = pd.DataFrame(data=principal_components, columns=[f"PC{i+1}" for i in range(num_components)])
+
+                        # Perform k-medoids clustering and select the best result based on the highest silhouette score
+                        print(f"\nnumber of extreme solutions: {num_outliers}, deviations: {d}, count: {c}")
+                        labels, representative_solutions_index, representative_solutions, silhouette_score = run_kmedoids_multiple_times(pca_data, min_clusters, max_clusters, input_data_no_outliers, pca, fixed_clusters_boolean, fixed_clusters)
+                
+                        # Store results in cache using the hash key
+                        cache[data_hash_key] = (max(labels)+1, silhouette_score, d, c)
+
                     # Define the final solution as the solution with the highest silhouette score; the number of extreme solutions must also be less than the number of clusters multiplied by the outlier_to_cluster_ratio
                     if ((silhouette_score > final_score) and (num_outliers < (len(representative_solutions_index) * outlier_to_cluster_ratio))):
                         final_score = silhouette_score
