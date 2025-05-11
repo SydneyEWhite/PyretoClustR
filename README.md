@@ -1,7 +1,7 @@
 # K-Means & K-Medoid Clustering on Pareto Optimal Solutions
 ### Last Updated: January 26th 2025
 ### Contributors: Sydney White, Michael Strauch, Felix Witing, Cordula Wittekind, Martin Volk
-### [Paper Submitted]
+### https://doi.org/10.1016/j.envsoft.2025.106508
 
 ## Overview
  - This framework performs k-means and k-medoids clustering on a set of Pareto optimal solutions derived from a multi-objective optimization algorithm. 
